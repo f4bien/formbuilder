@@ -1,1 +1,3 @@
-This node is required
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<fmt:message key="label.required"/>
