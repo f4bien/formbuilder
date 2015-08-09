@@ -14,7 +14,7 @@
 <c:if test="${not empty props.mask}">
     <template:addResources>
         <script type="text/javascript">
-            $(document).ready(function() {
+            $(function() {
                 $("\#${currentNode.name}").mask("${currentNode.properties.mask.string}");
             });
         </script>
@@ -26,13 +26,13 @@
     <c:set var="required" value="required"/>
 </c:if>
 
-<p class="field">
-<label for="${currentNode.name}" class="left">${fn:escapeXml(currentNode.properties['jcr:title'].string)}</label>
-<input ${disabled} type="text" ${required} class="${required}" id="${currentNode.name}" name="${currentNode.name}" maxlength="${currentNode.properties.maxLength.long}" size="${currentNode.properties.size.long}"
+<div class="form-group">
+<label for="${currentNode.name}">${fn:escapeXml(currentNode.properties['jcr:title'].string)}</label>
+<input ${disabled} type="text" ${required} class="form-control ${required}" id="${currentNode.name}" name="${currentNode.name}" maxlength="${currentNode.properties.maxLength.long}" size="${currentNode.properties.size.long}"
                    value="<c:if test="${not empty sessionScope.formError}">${sessionScope.formDatas[currentNode.name][0]}</c:if><c:if test="${empty currentNode.properties.mask and empty sessionScope.formError}">${currentNode.properties.defaultValue.string}</c:if>"/>
 <c:if test="${renderContext.editMode}">
     <div class="formMarginLeft">
-        <p><fmt:message key="label.listOfValidation"/></p>
+        <fmt:message key="label.listOfValidation"/>
         <ol>
             <c:forEach items="${jcr:getNodes(currentNode,'jnt:formElementValidation')}" var="formElement" varStatus="status">
                 <li><template:module node="${formElement}" view="edit"/></li>
@@ -44,4 +44,4 @@
         </div>
     </div>
 </c:if>
-</p>
+</div>
