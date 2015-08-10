@@ -1,17 +1,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
+
 <template:addResources type="inlinejavascript">
-    <script type='text/javascript'>
+    <script type="text/javascript">
         $(function () {
-            $('input[name="street"],input[name="street2"],input[name="city"],input[name="state"],input[name="zip"],input[name="country"]').change(function () {
-                var x = $('input[name="street"]').val() + ' '
-                        + $('input[name="street2"]').val() + ' '
-                        + $('input[name="city"]').val() + ' '
-                        + $('input[name="state"]').val() + ' '
-                        + $('input[name="zip"]').val() + ' '
-                        + $('input[name="country"]').val();
-                $('#${currentNode.name}').val(x);
-            });
+            $('input[name="street"],input[name="street2"],input[name="city"],input[name="state"],input[name="zip"],input[name="country"]')
+                    .on('change', function () {
+                        var address = $('input[name="street"]').val() + ' '
+                                + $('input[name="street2"]').val() + ' '
+                                + $('input[name="city"]').val() + ' '
+                                + $('input[name="state"]').val() + ' '
+                                + $('input[name="zip"]').val() + ' '
+                                + $('input[name="country"]').val();
+                        $('\#${currentNode.name}').val(address);
+                    });
         });
     </script>
 </template:addResources>
@@ -25,7 +28,7 @@
             id="${currentNode.name}"
             name="${currentNode.name}"
             value="${sessionScope.formDatas[currentNode.name][0]}"
-            ${moduleMap.requiredAttr}
+    ${moduleMap.requiredAttr}
             readonly="readonly"/>
     <table cellpadding="4">
         <tr>
