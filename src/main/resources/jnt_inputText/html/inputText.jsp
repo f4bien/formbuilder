@@ -14,27 +14,33 @@
 <c:if test="${not empty props.mask}">
     <template:addResources>
         <script type="text/javascript">
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $("\#${currentNode.name}").mask("${currentNode.properties.mask.string}");
             });
         </script>
     </template:addResources>
 </c:if>
 
-<c:set var="required" value=""/>
-<c:if test="${jcr:hasChildrenOfType(currentNode, 'jnt:required')}">
-    <c:set var="required" value="required"/>
-</c:if>
+<template:include view="hidden.required"/>
+<c:set var="requiredClassValue" value="${not empty moduleMap.requiredAttr ? 'required':''}"/>
 
 <p class="field">
 <label for="${currentNode.name}" class="left">${fn:escapeXml(currentNode.properties['jcr:title'].string)}</label>
-<input ${disabled} type="text" ${required} class="${required}" id="${currentNode.name}" name="${currentNode.name}" maxlength="${currentNode.properties.maxLength.long}" size="${currentNode.properties.size.long}"
-                   value="<c:if test="${not empty sessionScope.formError}">${sessionScope.formDatas[currentNode.name][0]}</c:if><c:if test="${empty currentNode.properties.mask and empty sessionScope.formError}">${currentNode.properties.defaultValue.string}</c:if>"/>
+<input ${disabled}
+        type="text"
+        ${requiredAttr}
+        class="${requiredClassValue}"
+        id="${currentNode.name}"
+        name="${currentNode.name}"
+        maxlength="${currentNode.properties.maxLength.long}"
+        size="${currentNode.properties.size.long}"
+        value="<c:if test="${not empty sessionScope.formError}">${sessionScope.formDatas[currentNode.name][0]}</c:if><c:if test="${empty currentNode.properties.mask and empty sessionScope.formError}">${currentNode.properties.defaultValue.string}</c:if>"/>
 <c:if test="${renderContext.editMode}">
     <div class="formMarginLeft">
         <p><fmt:message key="label.listOfValidation"/></p>
         <ol>
-            <c:forEach items="${jcr:getNodes(currentNode,'jnt:formElementValidation')}" var="formElement" varStatus="status">
+            <c:forEach items="${jcr:getNodes(currentNode,'jnt:formElementValidation')}" var="formElement"
+                       varStatus="status">
                 <li><template:module node="${formElement}" view="edit"/></li>
             </c:forEach>
         </ol>
