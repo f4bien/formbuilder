@@ -2,19 +2,20 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="template" uri="http://www.jahia.org/tags/templateLib" %>
 
+<template:include view="hidden.inputs"/>
+
 <template:addResources type="inlinejavascript">
     <script type="text/javascript">
         $(function () {
-            $('input[name="street"],input[name="street2"],input[name="city"],input[name="state"],input[name="zip"],input[name="country"]')
+            $('.form-group-address input')
                     .on('change', function () {
-                        var address = $('input[name="street"]').val() + ' '
-                                + $('input[name="street2"]').val() + ' '
-                                + $('input[name="city"]').val() + ' '
-                                + $('input[name="state"]').val() + ' '
-                                + $('input[name="zip"]').val() + ' '
-                                + $('input[name="country"]').val();
+                        var address = null;
+                        <c:forTokens items="${moduleMap.inputNames}" var="inputName" delims="," varStatus="status">
+                        address += ${not status.first ? "' ' + " : ""}$('input[name="${inputName}"]').val();
+                        </c:forTokens>
                         $('\#${currentNode.name}').val(address);
-                    });
+                    }
+            );
         });
     </script>
 </template:addResources>
@@ -22,7 +23,7 @@
 <template:include view="hidden.required"/>
 <c:set var="requiredClassValue" value="${not empty moduleMap.requiredAttr ? 'required':''}"/>
 
-<div>
+<div class="form-group-address">
     <input ${disabled}
             type="text"
             id="${currentNode.name}"
@@ -30,26 +31,13 @@
             value="${sessionScope.formDatas[currentNode.name][0]}"
     ${moduleMap.requiredAttr}
             readonly="readonly"/>
-    <table cellpadding="4">
-        <tr>
-            <td><label for="street"><fmt:message key="address.street"/></label></td>
-            <td colspan="3"><input ${disabled} type="text" maxlength="50" size="40" name="street"></td>
-        </tr>
-        <tr>
-            <td><label for="street2"><fmt:message key="address.street2"/></label></td>
-            <td colspan="3"><input ${disabled} type="text" maxlength="50" size="40" name="street2"></td>
-        </tr>
-        <tr>
-            <td><label for="city"><fmt:message key="address.city"/></label></td>
-            <td><input ${disabled} type="text" maxlength="40" size="18" name="city"></td>
-            <td align="right"><label for="state"><fmt:message key="address.state"/></label></td>
-            <td align="right"><input ${disabled} type="text" maxlength="15" size="6" name="state"></td>
-        </tr>
-        <tr>
-            <td><label for="zip"><fmt:message key="address.zip"/></label></td>
-            <td><input ${disabled} type="text" maxlength="10" size="6" name="zip"></td>
-            <td align="right"><label for="country"><fmt:message key="address.country"/></label></td>
-            <td align="right"><input ${disabled} type="text" maxlength="40" size="6" name="country"></td>
-        </tr>
-    </table>
+
+    <c:forTokens items="${moduleMap.inputNames}" var="inputName" delims=",">
+        <div class="form-group">
+            <c:set var="fieldName" value="inputName"/>
+            <c:set var="fieldId" value="${fieldName}${currentNode.identifier}"/>
+            <label for="${fieldId}"><fmt:message key="address.${fieldName}"/></label>
+            <input ${disabled} type="text" class="form-control" id="${fieldId}" name="${fieldName}">
+        </div>
+    </c:forTokens>
 </div>
